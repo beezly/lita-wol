@@ -11,8 +11,8 @@ module Lita
       def wake(response) 
         mac_address = response.matches[0][1]
         host = response.matches[0][2]
-        mac_address = redis.get(host) if (host != "") 
-        if mac_address == "" 
+        mac_address = redis.get(host) unless host.empty?
+        if mac_address.empty?
           response.reply "Could not find mac_address"
         else
           wol=::Wol::WakeOnLan.new(mac: mac_address).wake
